@@ -11,7 +11,6 @@ export interface Notes {
 }
 
 export interface NotesAddBody {
-  shift: string
   math: number
   science: number
   language: number

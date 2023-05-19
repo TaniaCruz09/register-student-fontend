@@ -14,11 +14,11 @@ import { Link } from 'react-router-dom'
 import Button from '@mui/material/Button'
 
 import { Layout } from '../../components'
-import { Notes } from '../../interfaces'
+import { Student } from '../../interfaces'
 import { IconButton } from '@mui/material'
 
 interface Column {
-  id: 'math' | 'science' | 'language' | 'social' | 'art' | 'name' | 'actions'
+  id: 'name' | 'grade' | 'shift' | 'year' | 'actions'
   label: string
   minWidth?: number
   align?: 'right'
@@ -26,55 +26,50 @@ interface Column {
 
 const columns: readonly Column[] = [
   {
-    id: 'math',
-    label: 'math'
-    // minWidth: 670
-  },
-  {
-    id: 'science',
-    label: 'science'
-    // minWidth: 670
-  },
-  {
-    id: 'language',
-    label: 'language'
-    // minWidth: 670
-  },
-  {
-    id: 'social',
-    label: 'social'
-    // minWidth: 670
-  },
-  {
-    id: 'art',
-    label: 'art'
-    // minWidth: 670
-  },
-  {
     id: 'name',
-    label: 'name'
+    label: 'Name'
     // minWidth: 670
+  },
+  {
+    id: 'grade',
+    label: 'grade'
+    //  minWidth: 100
+  },
+  {
+    id: 'shift',
+    label: 'shift',
+    // minWidth: 170,
+    align: 'right'
+  },
+  {
+    id: 'year',
+    label: 'year',
+    // minWidth: 170,
+    align: 'right'
   },
   {
     id: 'actions',
-    label: 'actions'
-    // minWidth: 670
+    label: 'actions',
+    // minWidth: 170,
+    align: 'right'
   }
 ]
 
-export const NotesPage = () => {
+export const StudentPage = () => {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
-  const [notes, setNotes] = useState<Notes[]>([])
+  const [students, setStudents] = useState<Student[]>([])
 
   useEffect(() => {
-    getNotes()
+    getStudents()
   }, [])
 
-  const getNotes = async (): Promise<void> => {
-    const { data } = await axios.get<Notes[]>('http://localhost:3000/notes')
+  const getStudents = async (): Promise<void> => {
+    const { data } = await axios.get<Student[]>('http://localhost:3000/students')
 
-    setNotes(data)
+    console.log(data)
+
+    setStudents(data)
   }
 
   const handleChangePage = (_: unknown, newPage: number) => {
@@ -86,13 +81,14 @@ export const NotesPage = () => {
     setPage(0)
   }
 
+  //hace el llamdo d
   const handleChangeDelete = async (uuid: string) => {
     try {
-      await axios.delete(`http://localhost:3000/notes/${uuid}`)
+      const response = await axios.delete(`http://localhost:3000/students/${uuid}`)
 
-      await getNotes()
-
+      getStudents()
       alert('Estudiante eliminado')
+      console.log(response)
     } catch (e) {
       alert('Error al eliminar estudiante')
     }
@@ -100,11 +96,12 @@ export const NotesPage = () => {
 
   return (
     <Layout>
-      <Link to={`/notes/add`}>
+      <Link to={`/students/add`}>
         <Button variant="contained" color="success" sx={{ marginBottom: 5 }}>
-          Agregar nota
+          Agregar estudiante
         </Button>
       </Link>
+
       <Paper sx={{ width: '100%', overflow: 'hidden' }}>
         <TableContainer>
           <Table stickyHeader aria-label="sticky table">
@@ -118,25 +115,25 @@ export const NotesPage = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {notes.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((note, index) => {
+              {students.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((student, index) => {
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={note.id}>
+                  <TableRow hover role="checkbox" tabIndex={-1} key={student.id}>
                     {columns.map(column => {
                       if (column.id === 'actions')
                         return (
                           <TableCell key={index}>
-                            <Link to={`/notes/edit/${note.id}`}>
+                            <Link to={'/students'}>
                               <IconButton aria-label="delete">
                                 <EditIcon />
                               </IconButton>
                             </Link>
-                            <IconButton aria-label="delete" onClick={() => handleChangeDelete(note.id)}>
+                            <IconButton aria-label="delete" onClick={() => handleChangeDelete(student.id)}>
                               <DeleteIcon />
                             </IconButton>
                           </TableCell>
                         )
 
-                      const value: string | number = column.id === 'name' ? note.students[column.id] : note[column.id]
+                      const value: string | number = student[column.id]
                       return (
                         <TableCell key={column.id} align={column.align}>
                           {value}
@@ -152,7 +149,7 @@ export const NotesPage = () => {
         <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
-          count={notes.length}
+          count={students.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

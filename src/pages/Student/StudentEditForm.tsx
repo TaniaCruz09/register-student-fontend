@@ -1,10 +1,11 @@
-import { useState, ChangeEvent } from 'react'
+import { useEffect, useState, ChangeEvent } from 'react'
 import axios from 'axios'
 import { Button, TextField } from '@mui/material'
 import SendIcon from '@mui/icons-material/Send'
 import { useFormik } from 'formik'
+import { useParams } from 'react-router-dom'
 
-import { StudentAddBody } from '../../interfaces'
+import { StudentAddBody, Students } from '../../interfaces'
 import { Layout } from '../../components'
 
 const initialValues: StudentAddBody = {
@@ -16,13 +17,31 @@ const initialValues: StudentAddBody = {
 
 export const StudentAddForm = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [student, setStudent] = useState<Students>()
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     setSelectedFile(file || null)
   }
 
-  const { handleSubmit, handleChange, values } = useFormik({
+  let { id } = useParams()
+
+  useEffect(() => {
+    if (id !== undefined) getStudent(id)
+  }, [])
+
+  const getStudent = async (uuid: string): Promise<void> => {
+    const { data } = await axios.get<Students>(`http://localhost:3000/students/${uuid}`)
+
+    setFieldValue('name', data.math)
+    setFieldValue('grade', data.math)
+    setFieldValue('shift', data.language)
+    setFieldValue('year', data.social)
+
+    setStudent(data)
+  }
+
+  const { handleSubmit, handleChange, setFieldValue, values } = useFormik({
     initialValues,
     onSubmit: async values => {
       try {
@@ -41,7 +60,16 @@ export const StudentAddForm = () => {
 
           alert('DATO GUARDADO')
         } else {
-          alert('No hay imagen cargada')
+          const formData = new FormData()
+          formData.append('name', values.name)
+          formData.append('grade', values.grade)
+          formData.append('shift', values.shift)
+          formData.append('year', String(values.year))
+
+          const response = await axios.post('http://localhost:3000/students', formData)
+          console.log(response)
+
+          alert('DATO ACTUALIZADO')
         }
       } catch (e) {
         alert('ALGO SALIO MAL :(')

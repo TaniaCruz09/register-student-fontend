@@ -16,6 +16,8 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd'
+import { Link } from 'react-router-dom'
+
 // import MailIcon from '@mui/icons-material/Mail'
 
 const drawerWidth = 240
@@ -128,7 +130,49 @@ export const Layout: FC<PropsWithChildren> = ({ children }) => {
           </IconButton>
         </DrawerHeader>
         <List>
-          <ListItem disablePadding sx={{ display: 'block' }}>
+          <Link to={`/students`}>
+            <ListItem disablePadding sx={{ display: 'block' }}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center'
+                  }}
+                ></ListItemIcon>
+                <AssignmentIndIcon />
+                <ListItemText primary={'Estudiantes'} sx={{ opacity: open ? 1 : 0, marginLeft: 1 }} />
+              </ListItemButton>
+            </ListItem>
+          </Link>
+          <Link to={`/notes`}>
+            <ListItem disablePadding sx={{ display: 'block' }}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center'
+                  }}
+                ></ListItemIcon>
+                <AssignmentIndIcon />
+                <ListItemText primary={'Notas'} sx={{ opacity: open ? 1 : 0, marginLeft: 1 }} />
+              </ListItemButton>
+            </ListItem>
+          </Link>
+          {/* <ListItem disablePadding sx={{ display: 'block' }}>
             <ListItemButton
               sx={{
                 minHeight: 48,
@@ -146,45 +190,7 @@ export const Layout: FC<PropsWithChildren> = ({ children }) => {
               <AssignmentIndIcon />
               <ListItemText primary={'Tania'} sx={{ opacity: open ? 1 : 0, marginLeft: 1 }} />
             </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding sx={{ display: 'block' }}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? 'initial' : 'center',
-                px: 2.5
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : 'auto',
-                  justifyContent: 'center'
-                }}
-              ></ListItemIcon>
-              <AssignmentIndIcon />
-              <ListItemText primary={'Tania'} sx={{ opacity: open ? 1 : 0, marginLeft: 1 }} />
-            </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding sx={{ display: 'block' }}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? 'initial' : 'center',
-                px: 2.5
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : 'auto',
-                  justifyContent: 'center'
-                }}
-              ></ListItemIcon>
-              <AssignmentIndIcon />
-              <ListItemText primary={'Tania'} sx={{ opacity: open ? 1 : 0, marginLeft: 1 }} />
-            </ListItemButton>
-          </ListItem>
+          </ListItem> */}
         </List>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3, overflow: 'hidden', marginTop: 10 }}>
